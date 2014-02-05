@@ -1,6 +1,5 @@
-class CGraph
-  
-  
+class Cgraph
+
   def initialize()
     @roots = []
     @vertices = []
@@ -8,7 +7,14 @@ class CGraph
     @Nvertices = 0
     @NEdges = 0
   end
-
+  
+  def new()
+  end
+  
+  def getVertices()
+    return @vertices
+  end
+  
   def addVertice(i)
     @vertices.push(i)
     @roots.push(i) # element's root is itself
@@ -18,7 +24,8 @@ class CGraph
   def addEdge(a,b)
     @edges.push([a,b])
     #b will have a as father
-    @roots[getRoot(a)] = getRoot(b)
+    
+    @roots[getRoot(a)] = getRoot(b) 
 
     @NEdges +=1
   end
