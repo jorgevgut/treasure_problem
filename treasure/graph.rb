@@ -56,21 +56,21 @@ end
 
 
 # # Implementations
-g = Graph.new([ [:a, :b, 7],
-                [:a, :c, 9],
-                [:a, :f, 14],
-                [:b, :c, 10],
-                [:b, :d, 15],
-                [:c, :d, 11],
-                [:c, :f, 2],
-                [:d, :e, 6],
-                [:e, :f, 9],
-                [:z,:g,1],
-              ])
+# g = Graph.new([ [:a, :b, 7],
+#                 [:a, :c, 9],
+#                 [:a, :f, 14],
+#                 [:b, :c, 10],
+#                 [:b, :d, 15],
+#                 [:c, :d, 11],
+#                 [:c, :f, 2],
+#                 [:d, :e, 6],
+#                 [:e, :f, 9],
+#                 [:z,:g,1],
+#               ])
  
-start, stop = :a, :z
-path, dist = g.shortest_path(start, stop)
-puts "shortest path from #{start} to #{stop} has cost #{dist}:"
-puts path.join(" -> ")
+# start, stop = :a, :z
+# path, dist = g.shortest_path(start, stop)
+# puts "shortest path from #{start} to #{stop} has cost #{dist}:"
+# puts path.join(" -> ")
 
 
