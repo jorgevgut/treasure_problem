@@ -12,28 +12,35 @@ class CGraph
   def addVertice(i)
     @vertices.push(i)
     @roots.push(i) # element's root is itself
-    @NVertices+=1
+    @Nvertices+=1
   end
 
   def addEdge(a,b)
-    @Edges.push([a,b])
+    @edges.push([a,b])
     #b will have a as father
-    @roots[b] = a
+    @roots[getRoot(a)] = getRoot(b)
+
     @NEdges +=1
+  end
+
+  def getRoot(i)
+    while i !=  @roots[i] do
+      i = @roots[i]
+    end
+    return i
   end
 
   # Returns true if a possible path exist between A and B
   def isConnected(a,b)
-    result = false
-    while @roots[a] != @roots[b]
-      if temp_root == @roots[b]
-        return false
-      end
-      temp_root = @roots[b]
-      @roots[b] = @roots[temp_root]
-      result = true
+    if getRoot(a) == getRoot(b)
+      return true
+    else
+      return false
     end
-    return result
+  end
+
+  def to_s
+    return "Vertices:#{@vertices}\nEdges:#{@edges}\nRoots:#{@roots}\n"
   end
 
 end
