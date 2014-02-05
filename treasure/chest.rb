@@ -1,4 +1,4 @@
-require "./graph.rb"
+require "./chest_graph.rb"
 
 class Treasure_case 
 
@@ -8,9 +8,6 @@ class Treasure_case
     @nChests = noc
     @solutions = []
     @output = ""  
-  end
-
-  def new()
   end
 
   def setStartingKeys(k)
@@ -25,14 +22,55 @@ class Treasure_case
   def isPossibleRec(keys,chests)
     # print "exec_Possible rec:\ncurrent keys: #{keys}\nCurrent chests:#{chests.length}\n"    
     
-    #first step, we need to create the graph
-    #v0 determines the first node
-    graph = [];
-    # create v0 to all connections
-    # create chests symbols
-   
+    possible = true
+    my_chest_graph = Cgraph.new()
+    #first add all vertices
+    #first vertice is going to be v0 further vertices will be added +1
+    my_chest_graph.addVertice(0)
+    chests.each_index{
+      |i|
+      my_chest_graph.addVertice(i+1)
+    }
+    
+    #second stage, add Edges
+    my_chest_graph.getVertices.each_index{
+      |i|
+      #if we are on V0 then connect curent keys
+      if i == 0
+        
+        for key in keys
+          chests.each_index{ |ci|
+            if chests[ci].unlockKey == key
+              my_chest_graph.addEdge(i,ci+1) #perform union
+              break
+            end
+          }
+        end
+      else
+        for key in chests[i-1].getKeys
+          chests.each_index{ |ci|
+            if chests[i-1].unlockKey == key
+              my_chest_graph.addEdge(i,ci+1) #perform union
+            end
+          }
+        end
+      end
+    }
+    #possible is false, now check if al points are connected to v0
+    for i in my_chest_graph.getVertices
+      if(i!=0)
+        temp = my_chest_graph.isConnected(0,i)
+        if temp == false
+          possible = false
+          break
+        end
+      end
+    end
+    #termino chingon
+    return possible
     chests.each_index { 
       |i| # i being the index
+
       # get chests this dude can open
       _ckeys = chests[i].getKeys
       _ckeys = _ckeys.uniq #compact the keys
@@ -50,26 +88,24 @@ class Treasure_case
       end
     }
 
-    g = Graph.new(graph)
-    nice = true 
+    # g = Graph.new(graph)
+    # nice = true 
 
-    chests.each_index{ |i|
+    # chests.each_index{ |i|
     
-      if graph == nil || graph[i] == nil
-        return false
-      end
-      start,stop = graph[0][0],graph[i][0]
+    #   if graph == nil || graph[i] == nil
+    #     return false
+    #   end
+    #   start,stop = graph[0][0],graph[i][0]
       
-      path , dist = g.shortest_path(start,stop)
-      if dist.to_s == "Infinity" 
-        return false
-      end
-    }
+    #   path , dist = g.shortest_path(start,stop)
+    #   if dist.to_s == "Infinity" 
+    #     return false
+    #   end
+    # }
    
     # puts "shortest path from #{start} to #{stop} has cost #{dist}:"
     # puts path.join(" -> ")
-    
-    return nice
     
  
     if chests.length==0
@@ -157,7 +193,7 @@ class Treasure_case
       end
     return false
   end
-end
+    end
 
   #Search Logic 
   def search()
