@@ -25,6 +25,53 @@ class Treasure_case
   def isPossibleRec(keys,chests)
     # print "exec_Possible rec:\ncurrent keys: #{keys}\nCurrent chests:#{chests.length}\n"    
     
+    #first step, we need to create the graph
+    #v0 determines the first node
+    graph = [];
+    # create v0 to all connections
+    # create chests symbols
+   
+    chests.each_index { 
+      |i| # i being the index
+      # get chests this dude can open
+      _ckeys = chests[i].getKeys
+      _ckeys = _ckeys.uniq #compact the keys
+      joins = []
+      
+      for k in _ckeys
+        chests.each_index { |j|
+          if chests[j].unlockKey == k
+            joins.push(j)
+          end
+        }
+      end
+      for k in joins
+        graph.push([i.to_s.to_sym,k.to_s.to_sym,10])
+      end
+    }
+
+    g = Graph.new(graph)
+    nice = true 
+
+    chests.each_index{ |i|
+    
+      if graph == nil || graph[i] == nil
+        return false
+      end
+      start,stop = graph[0][0],graph[i][0]
+      
+      path , dist = g.shortest_path(start,stop)
+      if dist.to_s == "Infinity" 
+        return false
+      end
+    }
+   
+    # puts "shortest path from #{start} to #{stop} has cost #{dist}:"
+    # puts path.join(" -> ")
+    
+    return nice
+    
+ 
     if chests.length==0
       return true
     elsif keys.length == 0 && chests.length > 0    
@@ -72,7 +119,7 @@ class Treasure_case
             next_i = 1
             next_uk = chests[chest_index+next_i].unlockKey
             fixed_i = chest_index
-           
+            
             while unlocks_left[next_uk] < new_keys.count(next_uk) && new_array.length > 1
               if chests[chest_index+next_i]!= nil
                 next_uk = chests[chest_index+next_i].unlockKey                
@@ -97,7 +144,7 @@ class Treasure_case
             print "current keys: #{keys}\nCurrent chests:#{chests.length}\n"
             return true
           else
-           # puts "Dio false y revisando nuevas cosas"
+            # puts "Dio false y revisando nuevas cosas"
             stuck_counter+=1
             puts "Stuck counter #{stuck_counter} - number of chests #{chests.length}"
             if(stuck_counter>=chests.length)
@@ -108,10 +155,10 @@ class Treasure_case
           chest_index+=1
         end
       end
-      return false
-    end
+    return false
   end
-  
+end
+
   #Search Logic 
   def search()
     total_n_chests = @N.length
@@ -220,7 +267,7 @@ class Treasure_case
   def toString()
     return output
   end
-
+  
 end 
 
 
@@ -262,15 +309,15 @@ class Chest
   # If chest is open might return keys
   # returns nil if closed or not keys in this chest
   def getKeys()
-    if @isClosed == false
+    # if @isClosed == false
       if @keys.length == 0
         return []
       else
         return @keys
       end
-    else
-      return []
-    end
+    #else
+    # return []
+    #end
   end
   
   def close()
