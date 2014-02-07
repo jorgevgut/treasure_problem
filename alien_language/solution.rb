@@ -1,13 +1,10 @@
-# L numero de letras en minusculas
-# D es el numero de palabras
-
 filename = ARGV.first
 file = File.open(filename)
 
-numeros = file.readline.split.map(&:to_i)
-L = numeros[0]
-D = numeros[1]
-N = numeros[2]
+numbers = file.readline.split.map(&:to_i)
+L = numbers[0]
+D = numbers[1]
+N = numbers[2]
 
 dictionary = []
 
