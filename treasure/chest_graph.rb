@@ -6,6 +6,7 @@ class Cgraph
     @edges = []
     @Nvertices = 0
     @NEdges = 0
+    
   end
   
   def new()
@@ -49,5 +50,71 @@ class Cgraph
   def to_s
     return "Vertices:#{@vertices}\nEdges:#{@edges}\nRoots:#{@roots}\n"
   end
+
+end
+
+class Vertex 
+
+  def initialize(id)
+    @id = id
+    @pointsTo = []
+  end
+
+  def getId
+    return @id
+  end
+
+  # set a path from this vertex to another vertex
+  def setPathTo(vertex)
+    included = false
+    for v in @pointsTo
+      if(v.getId == vertex.getId)
+        included = true
+        break
+      end
+    end
+    if included == false
+      @pointsTo.push(vertex)
+    end
+    
+  end
+  # use to get the IDs of other vertexes to which you can get from here
+  def getPaths
+    return @pointsTo
+  end
+
+  # usage set visited as empty array
+  # ex. vertexSomething.isConnectedWith(Vertex2,[])
+  def isConnectedWith(vertex,visited)
+    # determines wether there is a path or no
+    found = false #at the begining you stil haven't found a connection
+    prev = @id #previous is always it self
+    if visited.include?(@id) == false
+      puts "Not visited yet"
+      visited.push(@id)
+      targetId = vertex.getId
+      for element in self.getPaths
+        currentId = element.getId
+        # found the path
+        if currentId  == targetId
+          return true
+          break
+       # elsif
+          # if !visited.include?(currentId)
+          #   visited.push(currentId)
+          # end
+        end
+      end
+      #didn't found adjacent
+      for elem in self.getPaths
+        
+        if elem.isConnectedWith(vertex,visited)
+          return true
+        end
+      end
+    end
+      return false
+  end
+
 
 end
